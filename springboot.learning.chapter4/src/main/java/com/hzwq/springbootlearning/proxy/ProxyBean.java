@@ -4,11 +4,14 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.hzwq.springbootlearning.invoke.Invocation;
 import com.hzwq.springbootlearning.service.Interceptor;
 
 public class ProxyBean implements InvocationHandler {
-	
+	private static Logger logger = LoggerFactory.getLogger(ProxyBean.class);
 	private Object target;
 	private Interceptor interceptor;
 	
@@ -39,6 +42,7 @@ public class ProxyBean implements InvocationHandler {
 			}
 		}catch(Exception ex) {
 			// 产生异常
+			logger.warn("发生异常，异常信息：" + ex.getCause());
 			exceptionFlag = true;
 		}
 		this.interceptor.after();

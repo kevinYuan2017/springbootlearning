@@ -4,10 +4,12 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import com.hzwq.springbootlearning.invoke.Invocation;
 import com.hzwq.springbootlearning.service.Interceptor;
 
+@Component("interceptor")
 public class MyInterceptor implements Interceptor {
 	
 	private static Logger logger = LoggerFactory.getLogger(MyInterceptor.class);

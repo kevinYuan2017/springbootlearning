@@ -7,12 +7,12 @@ import org.springframework.util.Assert;
 
 import com.hzwq.springbootlearning.service.HelloService;
 
-@Component("helloService")
+@Component("helloService")                                                                                                                                               
 public class HelloServiceImpl implements HelloService {
 	private static Logger logger = LoggerFactory.getLogger(HelloServiceImpl.class);
 	@Override
 	public void sayHello(String name) {
-		Assert.isNull(name, "parameter is null!!!");
+		Assert.notNull(name, "parameter is null!!!");
 		logger.info("Hello, {}", name);
 	}
 

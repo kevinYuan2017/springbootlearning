@@ -12,10 +12,7 @@ import com.hzwq.springbootlearning.service.impl.MyInterceptor;
 public class Application {
 
 	public static void main(String[] args) {
-//		SpringApplication.run(Application.class, args);
-		HelloService helloService = new HelloServiceImpl();
-		HelloService proxyBean = (HelloService) ProxyBean.getProxyBean(helloService, new MyInterceptor());
-		proxyBean.sayHello("");
+		SpringApplication.run(Application.class, args);
 	}
 
 }
