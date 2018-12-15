@@ -3,11 +3,6 @@ package com.hzwq.springbootlearning;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.hzwq.springbootlearning.proxy.ProxyBean;
-import com.hzwq.springbootlearning.service.HelloService;
-import com.hzwq.springbootlearning.service.impl.HelloServiceImpl;
-import com.hzwq.springbootlearning.service.impl.MyInterceptor;
-
 @SpringBootApplication
 public class Application {
 
