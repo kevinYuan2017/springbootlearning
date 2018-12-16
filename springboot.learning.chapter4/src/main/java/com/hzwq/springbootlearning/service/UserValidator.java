@@ -4,4 +4,6 @@ import com.hzwq.springbootlearning.pojo.User;
 
 public interface UserValidator {
 	boolean validate(User user);
+
+	boolean validateUserName(User user);
 }
