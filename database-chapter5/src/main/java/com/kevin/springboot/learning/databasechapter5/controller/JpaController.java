@@ -22,6 +22,6 @@ public class JpaController {
 
     @GetMapping("/users")
     public List<User> findUserByNameLikeAndNoteLike(String name, String note){
-        return userRepository.findByNameLikeAndNoteLike("%" + name + "%", "%" +  note + "%");
+        return userRepository.findByNameLikeAndNoteLike(name , note);
     }
 }
