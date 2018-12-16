@@ -22,7 +22,7 @@ public class MyAspect {
 	private static Logger logger = LoggerFactory.getLogger(MyAspect.class);
 	
 	@DeclareParents(
-			value = "com.hzwq.springbootlearning.service.impl.UserServiceImpl+", 
+			value = "com.hzwq.springbootlearning.service.impl.UserServiceImpl+",
 			defaultImpl = UserValidatorImpl.class)
 	public UserValidator userValidator;
 	

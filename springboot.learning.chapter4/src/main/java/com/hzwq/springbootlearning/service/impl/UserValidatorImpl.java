@@ -13,7 +13,12 @@ public class UserValidatorImpl implements UserValidator {
 	@Override
 	public boolean validate(User user) {
 		logger.info("引入新的接口: " + UserValidator.class.getSimpleName());
-		return user != null;
+		if (user != null){
+			logger.info("user is not null");
+			return true;
+		}else {
+			logger.warn("user is null, no need to continue");
+			return false;
+		}
 	}
-
 }
