@@ -27,7 +27,10 @@ public class MyAspect {
 			defaultImpl = UserValidatorImpl.class)
 	public UserValidator userValidator;
 	
-	@Pointcut("execution(* com.hzwq.springbootlearning.service.impl.UserServiceImpl.printUser(..))")
+//	@Pointcut("execution(* com.hzwq.springbootlearning.service.impl.UserServiceImpl.printUser(..))")
+//	public void pointCut() {
+//	}
+	@Pointcut("@annotation(com.hzwq.springbootlearning.annotation.UserValidate)")
 	public void pointCut() {
 	}
 	
