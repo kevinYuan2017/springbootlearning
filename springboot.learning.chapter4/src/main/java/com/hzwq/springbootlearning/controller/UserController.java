@@ -34,6 +34,12 @@ public class UserController {
 		return user;
 	}
 
+	@GetMapping("multiAspects")
+    public String multiAspects(){
+	    userService.multiAspects();
+	    return "multiAespects";
+    }
+
 	private User getUser(String id, String username, String note){
         return id != null || username != null || note != null ? new User(id, username, note) : null;
     }

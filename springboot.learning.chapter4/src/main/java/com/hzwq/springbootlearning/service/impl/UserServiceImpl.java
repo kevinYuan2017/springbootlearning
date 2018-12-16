@@ -17,4 +17,9 @@ public class UserServiceImpl implements UserService {
 		logger.info("User = {}", user.toString());
 	}
 
+	@Override
+	public void multiAspects() {
+		logger.info("multi aspects sequence test");
+	}
+
 }
