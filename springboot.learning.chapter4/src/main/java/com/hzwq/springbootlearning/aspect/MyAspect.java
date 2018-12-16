@@ -1,5 +1,6 @@
 package com.hzwq.springbootlearning.aspect;
 
+import com.hzwq.springbootlearning.pojo.User;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -30,9 +31,10 @@ public class MyAspect {
 	public void pointCut() {
 	}
 	
-	@Before("pointCut()")
-	public void before() {
+	@Before("pointCut() && args(user)")
+	public void before(User user) {
 		logger.info("before ...");
+		logger.info("user info: " + user);
 	}
 	
 	@Around("pointCut()")
