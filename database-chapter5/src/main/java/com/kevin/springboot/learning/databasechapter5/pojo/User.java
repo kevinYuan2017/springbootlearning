@@ -1,10 +1,18 @@
 package com.kevin.springboot.learning.databasechapter5.pojo;
 
+import com.kevin.springboot.learning.databasechapter5.converter.GenderConverter;
 import com.kevin.springboot.learning.databasechapter5.enumeration.Gender;
 
+import javax.persistence.*;
+
+@Entity(name = "user")
+@Table(name = "t_user")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
+    @Convert(converter = GenderConverter.class)
     private Gender gender;
     private String note;
 
