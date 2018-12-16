@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RestController
 @RequestMapping("/jpa")
@@ -17,5 +18,10 @@ public class JpaController {
     @GetMapping("/user/{id}")
     public User getUser(@PathVariable long id){
         return userRepository.findById(id);
+    }
+
+    @GetMapping("/users")
+    public List<User> findUserByNameLikeAndNoteLike(String name, String note){
+        return userRepository.findByNameLikeAndNoteLike("%" + name + "%", "%" +  note + "%");
     }
 }
