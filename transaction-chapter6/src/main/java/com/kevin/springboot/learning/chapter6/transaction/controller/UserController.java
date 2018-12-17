@@ -5,6 +5,7 @@ import com.kevin.springboot.learning.chapter6.transaction.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -20,5 +21,10 @@ public class UserController {
     @PostMapping
     public int insertUser(User user){
         return userService.insertUser(user);
+    }
+
+    @GetMapping("/all")
+    public List<User> getAllUsers(){
+        return userService.getAllUsers();
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service(value = "userService")
 public class UserServiceImpl implements UserService {
@@ -23,5 +24,10 @@ public class UserServiceImpl implements UserService {
     @Transactional(isolation = Isolation.READ_COMMITTED, timeout = 1)
     public int insertUser(User user) {
         return userDao.insertUser(user);
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        return userDao.getUsers();
     }
 }
