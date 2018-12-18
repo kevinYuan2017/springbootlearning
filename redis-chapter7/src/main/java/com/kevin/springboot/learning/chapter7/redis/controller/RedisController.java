@@ -121,18 +121,28 @@ public class RedisController {
 
     @GetMapping("/zset")
     public String zset(){
-        redisTemplate.delete("zset1");
-        HashSet<ZSetOperations.TypedTuple<String>> typedTupleHashSet = new HashSet<>();
-        for (int i = 1; i < 10; i++){
-            double sore = i * new Random().nextInt(100) * 0.01;
-            DefaultTypedTuple<String> defaultTypedTuple = new DefaultTypedTuple<>("value" + i, sore);
-            typedTupleHashSet.add(defaultTypedTuple);
-        }
+//        redisTemplate.delete("zset1");
+//        HashSet<ZSetOperations.TypedTuple<String>> typedTupleHashSet = new HashSet<>();
+//        for (int i = 1; i <= 10; i++){
+//            double sore = i * new Random().nextInt(100) * 0.01;
+//            DefaultTypedTuple<String> defaultTypedTuple = new DefaultTypedTuple<>("value" + i, sore);
+//            typedTupleHashSet.add(defaultTypedTuple);
+//        }
+//
+//        stringRedisTemplate.opsForZSet().add("zset1", typedTupleHashSet);
 
-        stringRedisTemplate.opsForZSet().add("zset1", typedTupleHashSet);
+        stringRedisTemplate.opsForZSet().add("zset1", "value1", 0.11);
+        stringRedisTemplate.opsForZSet().add("zset1", "value2", 0.41);
+        stringRedisTemplate.opsForZSet().add("zset1", "value3", 0.31);
+        stringRedisTemplate.opsForZSet().add("zset1", "value4", 0.42);
+        stringRedisTemplate.opsForZSet().add("zset1", "value5", 0.51);
+        stringRedisTemplate.opsForZSet().add("zset1", "value6", 0.61);
+        stringRedisTemplate.opsForZSet().add("zset1", "value7", 0.31);
+        stringRedisTemplate.opsForZSet().add("zset1", "value8", 0.51);
+        stringRedisTemplate.opsForZSet().add("zset1", "value9", 0.71);
+        stringRedisTemplate.opsForZSet().add("zset1", "value10", 0.81);
 
         BoundZSetOperations<String, String> zSetOps = stringRedisTemplate.boundZSetOps("zset1");
-        zSetOps.add("value10", 0.24);
         Set<String> scores = zSetOps.rangeByScore(0, 1);
         logger.info("scores: {}", scores);
 
