@@ -9,11 +9,11 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import redis.clients.jedis.JedisPoolConfig;
 
-@Configuration
+//@Configuration
 public class RedisConfig {
     private RedisConnectionFactory redisConnectionFactory = null;
 
-    @Bean(name = "redisConnectionFactory")
+//    @Bean(name = "redisConnectionFactory")
     public RedisConnectionFactory initRedisConnectionFactory(){
         if (this.redisConnectionFactory != null){
             return this.redisConnectionFactory;
@@ -42,7 +42,7 @@ public class RedisConfig {
         return jedisConnectionFactory;
     }
 
-    @Bean
+//    @Bean
     public RedisTemplate<Object, Object> redisTemplate(){
         RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
         RedisSerializer<String> stringSerializer = redisTemplate.getStringSerializer();
