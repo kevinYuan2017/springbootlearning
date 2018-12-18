@@ -3,16 +3,14 @@ package com.kevin.springboot.learning.chapter7.redis.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.BoundHashOperations;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.connection.RedisZSetCommands;
+import org.springframework.data.redis.core.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import redis.clients.jedis.Jedis;
+//import redis.clients.jedis.Jedis;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/redis")
@@ -43,9 +41,9 @@ public class RedisController {
         stringRedisTemplate.opsForValue().decrement("int");
         logger.info("after dec: int = {}", stringRedisTemplate.opsForValue().get("int"));
 
-        Jedis jedis = (Jedis) stringRedisTemplate.getConnectionFactory().getConnection().getNativeConnection();
-        jedis.decr("int");
-        logger.info("after dec_jedis: int = {}", jedis.get("int"));
+//        Jedis jedis = (Jedis) stringRedisTemplate.getConnectionFactory().getConnection().getNativeConnection();
+//        jedis.decr("int");
+//        logger.info("after dec_jedis: int = {}", jedis.get("int"));
 
         HashMap<String, String> hashMap = new HashMap<>();
         hashMap.put("field1", "value1");
@@ -77,6 +75,80 @@ public class RedisController {
         Long size2 = redisTemplate.opsForList().size("list_right_push_all");
         logger.info("size2: {}", size2);
         logger.info("list_right_push_all: {}", redisTemplate.opsForList().range("list_right_push_all", 0, -2));
+        return null;
+    }
+
+    @GetMapping("/set")
+    public String testSet(){
+        redisTemplate.delete("set1");
+        redisTemplate.delete("set2");
+
+        stringRedisTemplate.opsForSet().add("set1", "v1", "v1", "v2", "v3", "v4", "v50");
+        stringRedisTemplate.opsForSet().add("set2",  "v2", "v4", "v6", "v80");
+        Set<String> init_set1 = stringRedisTemplate.opsForSet().members("set1");
+        Set<String> init_set2 = stringRedisTemplate.opsForSet().members("set2");
+        logger.info("init: set1 = {}", init_set1);
+        logger.info("init: set2 = {}", init_set2);
+
+        BoundSetOperations<String, String> setOperations = stringRedisTemplate.boundSetOps("set1");
+        setOperations.add("v6", "v7");
+        setOperations.remove("v1", "v7");
+
+        Long set1_size = setOperations.size();
+        logger.info("set1_size = {}", set1_size);
+
+        Set<String> set1 = setOperations.members();
+        logger.info("set1 = {}", set1);
+
+        // intersect
+        Set<String> intersect = setOperations.intersect("set2");
+        logger.info("intersect of set1 and set2: {}", intersect);
+
+        // diff
+        Set<String> diff = setOperations.diff("set2");
+        logger.info("diff of set1 and set2: {}", diff);
+
+        setOperations.diffAndStore("set2", "diff");
+        logger.info("diff: {}", stringRedisTemplate.opsForSet().members("diff"));
+
+        Set<String> union = setOperations.union("set2");
+        logger.info("union of set1 and set2: {}", union);
+
+        setOperations.unionAndStore("set2", "union");
+        logger.info("union: {}", stringRedisTemplate.opsForSet().members("union"));
+        return null;
+    }
+
+    @GetMapping("/zset")
+    public String zset(){
+        redisTemplate.delete("zset1");
+        HashSet<ZSetOperations.TypedTuple<String>> typedTupleHashSet = new HashSet<>();
+        for (int i = 1; i < 10; i++){
+            double sore = i * new Random().nextInt(100) * 0.01;
+            DefaultTypedTuple<String> defaultTypedTuple = new DefaultTypedTuple<>("value" + i, sore);
+            typedTupleHashSet.add(defaultTypedTuple);
+        }
+
+        stringRedisTemplate.opsForZSet().add("zset1", typedTupleHashSet);
+
+        BoundZSetOperations<String, String> zSetOps = stringRedisTemplate.boundZSetOps("zset1");
+        zSetOps.add("value10", 0.24);
+        Set<String> scores = zSetOps.rangeByScore(0, 1);
+        logger.info("scores: {}", scores);
+
+        RedisZSetCommands.Range range = new RedisZSetCommands.Range();
+//        range.gt("value3");
+        range.gte("value4");
+//        range.lte("value8");
+        Set<String> rangeByLex = zSetOps.rangeByLex(range);
+        logger.info("rangeByLex: {}", rangeByLex);
+        Set<String> rangeByLex1 = stringRedisTemplate.opsForZSet().rangeByLex("zset1", RedisZSetCommands.Range.range().gte("value4"));
+        logger.info("rangeByLex1: {}", rangeByLex1);
+
+        Cursor<ZSetOperations.TypedTuple<String>> tupleCursor = stringRedisTemplate.opsForZSet().scan("zset1", ScanOptions.scanOptions().build());
+        tupleCursor.forEachRemaining((ZSetOperations.TypedTuple tuple) -> {
+            logger.info("value: {}, score: {}", tuple.getValue(), tuple.getScore());
+        });
         return null;
     }
 }
