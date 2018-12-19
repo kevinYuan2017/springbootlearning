@@ -1,9 +1,9 @@
 package com.kevin.springboot.learning.chapter7.redis;
 
-import com.kevin.springboot.learning.chapter7.redis.listener.RedisMessageListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -16,6 +16,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
+@EnableCaching
 @SpringBootApplication
 public class RedisApplication {
 	@Resource

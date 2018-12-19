@@ -35,10 +35,10 @@ public class RedisController {
         stringRedisTemplate.opsForValue().set("int", "1");
         logger.info("init_value: int = {}", stringRedisTemplate.opsForValue().get("int"));
 
-        stringRedisTemplate.opsForValue().increment("int");
+        stringRedisTemplate.opsForValue().increment("int", 1);
         logger.info("after_inc_stringRedisTemplate: int = {}", stringRedisTemplate.opsForValue().get("int"));
 
-        redisTemplate.opsForValue().increment("int");
+        redisTemplate.opsForValue().increment("int", 1);
         logger.info("after_inc_redisTemplate: int = {}", redisTemplate.opsForValue().get("int"));
 
         stringRedisTemplate.opsForValue().decrement("int");
