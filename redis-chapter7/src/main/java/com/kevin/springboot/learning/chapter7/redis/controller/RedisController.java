@@ -8,6 +8,7 @@ import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisZSetCommands;
 import org.springframework.data.redis.core.*;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 //import redis.clients.jedis.Jedis;
@@ -207,5 +208,11 @@ public class RedisController {
         logger.info("time used: " + (stopTime - startTime));
 
         return list;
+    }
+
+    @GetMapping("/publish/{topic}/{message}")
+    public Object publish(@PathVariable("topic") String channel, @PathVariable String message){
+        redisTemplate.convertAndSend(channel, message);
+        return null;
     }
 }
