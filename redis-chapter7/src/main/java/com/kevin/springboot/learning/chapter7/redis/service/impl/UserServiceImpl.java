@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Cacheable(cacheNames = "userDao:getUser", key = "#id", sync = true)
+    @Cacheable(cacheNames = "userDao:getUser", key = "#id")
     public User getUser(String id) {
         return userDao.getUser(id);
     }
@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @CacheEvict(cacheNames = {"userDao:getUser", "userDao:listUsers"})
+    @CacheEvict(cacheNames = {"userDao:getUser", "userDao:listUsers"}, allEntries = true)
     public int deluser(String id) {
         return userDao.deluser(id);
     }
