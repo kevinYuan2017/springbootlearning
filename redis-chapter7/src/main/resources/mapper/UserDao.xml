@@ -16,7 +16,7 @@
         </set>
         WHERE id = #{id}
     </update>
-    <delete id="deluser">
+    <delete id="delUser">
         DELETE FROM t_user WHERE id = #{id}
     </delete>
     <select id="getUser" resultType="user">

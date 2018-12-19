@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
     @Override
     @CachePut(cacheNames = "userDao:getUser", key = "#user.id")
-    @CacheEvict(cacheNames = "userDao:listUsers")
+    @CacheEvict(cacheNames = "userDao:listUsers", key = "'userList'")
     public User insertuser(User user) {
         userDao.insertUser(user);
         return user;
@@ -33,18 +33,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @CachePut(cacheNames = "userDao:getUser", key = "#user.id")
+    @CacheEvict(cacheNames = "userDao:listUsers", key = "'userList'")
     public User updateUser(User user) {
-        return userDao.updateUser(user);
+        userDao.updateUser(user);
+        return user;
     }
 
     @Override
-    @CacheEvict(cacheNames = {"userDao:getUser", "userDao:listUsers"}, allEntries = true)
-    public int deluser(String id) {
-        return userDao.deluser(id);
+    @CachePut(cacheNames = "userDao:getUser", key = "#id")
+    @CacheEvict(cacheNames ="userDao:listUsers", key = "'userList'")
+    public void deluser(String id) {
+        userDao.deluser(id);
     }
 
     @Override
-    @Cacheable(cacheNames = "userDao:listUsers")
+    @Cacheable(cacheNames = "userDao:listUsers", key = "'userList'")
     public List<User> listUsers() {
         return userDao.listUsers();
     }

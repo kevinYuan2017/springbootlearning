@@ -14,15 +14,11 @@ public interface UserDao {
 
     int insertUser(User user);
 
-
     User getUser(String id);
 
+    int updateUser(User user);
 
-    User updateUser(User user);
-
-
-    int deluser(String id);
-
+    int delUser(String id);
 
     List<User> listUsers();
 }
