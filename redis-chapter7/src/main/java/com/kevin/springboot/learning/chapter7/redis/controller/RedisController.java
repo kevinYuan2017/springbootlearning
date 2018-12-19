@@ -3,6 +3,8 @@ package com.kevin.springboot.learning.chapter7.redis.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisZSetCommands;
 import org.springframework.data.redis.core.*;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -160,5 +162,29 @@ public class RedisController {
             logger.info("value: {}, score: {}", tuple.getValue(), tuple.getScore());
         });
         return null;
+    }
+
+    @GetMapping("/multi")
+    public Object multi(){
+        redisTemplate.delete("key3");
+        redisTemplate.delete("key2");
+        redisTemplate.opsForValue().set("key1", "value1");
+        List list = (List) redisTemplate.execute((RedisConnection redisConnection) -> {
+            redisConnection.watch("key1".getBytes());
+            redisConnection.multi();
+
+            redisConnection.incr("key1".getBytes());
+
+            redisConnection.set("key2".getBytes(), "value2".getBytes());
+            logger.info("val1_key2: {}", redisConnection.get("key2".getBytes()));
+
+            redisConnection.set("key3".getBytes(), "value3".getBytes());
+            logger.info("val1_key3: {}", redisConnection.get("key3".getBytes()));
+
+            return redisConnection.exec();
+        });
+        logger.info("result list: {}", list);
+
+        return  list;
     }
 }
