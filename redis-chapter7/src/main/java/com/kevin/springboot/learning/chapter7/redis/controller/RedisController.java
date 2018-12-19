@@ -41,7 +41,7 @@ public class RedisController {
         redisTemplate.opsForValue().increment("int", 1);
         logger.info("after_inc_redisTemplate: int = {}", redisTemplate.opsForValue().get("int"));
 
-        stringRedisTemplate.opsForValue().decrement("int");
+//        stringRedisTemplate.opsForValue().decrement("int");
         logger.info("after dec: int = {}", stringRedisTemplate.opsForValue().get("int"));
 
 //        Jedis jedis = (Jedis) stringRedisTemplate.getConnectionFactory().getConnection().getNativeConnection();

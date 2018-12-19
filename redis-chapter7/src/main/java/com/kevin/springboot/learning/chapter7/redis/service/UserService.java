@@ -15,4 +15,6 @@ public interface UserService {
     void delUser(String id);
 
     List<User> listUsers();
+
+    List<User> userPage(Integer pageNum, Integer pageSize);
 }

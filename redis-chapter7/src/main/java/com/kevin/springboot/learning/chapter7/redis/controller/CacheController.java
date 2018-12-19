@@ -22,6 +22,10 @@ public class CacheController {
     public List<User> userList(){
         return userService.listUsers();
     }
+    @GetMapping("/user/page/{pageNum}/{pageSize}")
+    public List<User> userPage(@PathVariable Integer pageNum, @PathVariable Integer pageSize){
+        return userService.userPage(pageNum, pageSize);
+    }
 
     @DeleteMapping("/user/{id}")
     public int delUser(@PathVariable String id){

@@ -51,7 +51,7 @@ public class RedisApplication {
 	public void initRedisTemplate(){
 		RedisSerializer stringSerializer = redisTemplate.getStringSerializer();
 		redisTemplate.setKeySerializer(stringSerializer);
-		redisTemplate.setValueSerializer(stringSerializer);
+//		redisTemplate.setValueSerializer(stringSerializer);
 		redisTemplate.setHashKeySerializer(stringSerializer);
 	}
 

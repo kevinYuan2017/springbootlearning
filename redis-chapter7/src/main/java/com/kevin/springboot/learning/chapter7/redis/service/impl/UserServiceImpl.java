@@ -1,5 +1,7 @@
 package com.kevin.springboot.learning.chapter7.redis.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.kevin.springboot.learning.chapter7.redis.dao.UserDao;
 import com.kevin.springboot.learning.chapter7.redis.pojo.User;
 import com.kevin.springboot.learning.chapter7.redis.service.UserService;
@@ -19,7 +21,7 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
     @Override
     @CachePut(cacheNames = "userDao:getUser", key = "#user.id")
-    @CacheEvict(cacheNames = "userDao:listUsers", key = "'userList'")
+    @CacheEvict(cacheNames = {"userDao:listUsers", "userDao:userPage"}, key = "'*'")
     public User insertuser(User user) {
         userDao.insertUser(user);
         return user;
@@ -41,7 +43,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @CachePut(cacheNames = "userDao:getUser", key = "#id")
-    @CacheEvict(cacheNames ="userDao:listUsers", key = "'userList'")
+    @CacheEvict(cacheNames ={"userDao:listUsers", "userDao:userPage"}, key = "'*'")
     public void delUser(String id) {
         userDao.delUser(id);
     }
@@ -50,5 +52,14 @@ public class UserServiceImpl implements UserService {
     @Cacheable(cacheNames = "userDao:listUsers", key = "'userList'")
     public List<User> listUsers() {
         return userDao.listUsers();
+    }
+
+    @Override
+    @Cacheable(cacheNames = "userDao:userPage", key = "'userPage:' + #pageNum + '/' + #pageSize")
+    public List<User> userPage(Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<User> userList = userDao.listUsers();
+        PageInfo<User> userPageInfo = new PageInfo<User>(userList);
+        return userPageInfo.getList();
     }
 }
