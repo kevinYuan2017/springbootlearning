@@ -42,8 +42,8 @@ public class UserServiceImpl implements UserService {
     @Override
     @CachePut(cacheNames = "userDao:getUser", key = "#id")
     @CacheEvict(cacheNames ="userDao:listUsers", key = "'userList'")
-    public void deluser(String id) {
-        userDao.deluser(id);
+    public void delUser(String id) {
+        userDao.delUser(id);
     }
 
     @Override

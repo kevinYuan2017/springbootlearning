@@ -25,7 +25,7 @@ public class CacheController {
 
     @DeleteMapping("/user/{id}")
     public int delUser(@PathVariable String id){
-        userService.deluser(id);
+        userService.delUser(id);
         return 1;
     }
 

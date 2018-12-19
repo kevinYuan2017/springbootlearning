@@ -12,7 +12,7 @@ public interface UserService {
 
     User updateUser(User user);
 
-    void deluser(String id);
+    void delUser(String id);
 
     List<User> listUsers();
 }
