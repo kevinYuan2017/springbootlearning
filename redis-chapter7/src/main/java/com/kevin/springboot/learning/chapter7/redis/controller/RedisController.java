@@ -187,4 +187,25 @@ public class RedisController {
 
         return  list;
     }
+
+    @GetMapping("/pipeline")
+    public Object pipeline(){
+        long startTime = System.currentTimeMillis();
+
+        List list = redisTemplate.executePipelined((RedisCallback<Object>) redisConnection -> {
+            for (int i = 0; i <= 10000; i++) {
+                redisConnection.del(("pipeline_" + i).getBytes());
+                redisConnection.set(("pipeline_" + i).getBytes(), ("value_" + i).getBytes());
+                if (i == 10000) {
+//                    logger.info("command just step into loop, vlaue is null: " + redisConnection.get("pipeline_10000".getBytes()));
+                }
+            }
+            return null;
+        });
+
+        long stopTime = System.currentTimeMillis();
+        logger.info("time used: " + (stopTime - startTime));
+
+        return list;
+    }
 }
