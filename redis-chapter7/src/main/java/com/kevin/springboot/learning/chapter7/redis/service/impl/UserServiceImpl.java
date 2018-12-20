@@ -8,6 +8,7 @@ import com.kevin.springboot.learning.chapter7.redis.service.UserService;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,9 +21,11 @@ public class UserServiceImpl implements UserService {
     @Resource
     private UserDao userDao;
     @Override
-    @CachePut(cacheNames = "userDao:getUser", key = "#user.id")
-    @CacheEvict(cacheNames = {"userDao:listUsers", "userDao:userPage"}, key = "'*'")
-    public User insertuser(User user) {
+    @Caching(
+            put = @CachePut(cacheNames = "userDao:getUser", key = "#user.id"),
+            evict = @CacheEvict(cacheNames = "userDao:listUsers", key = "'userList'")
+    )
+    public User insertUser(User user) {
         userDao.insertUser(user);
         return user;
     }
@@ -42,8 +45,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @CachePut(cacheNames = "userDao:getUser", key = "#id")
-    @CacheEvict(cacheNames ={"userDao:listUsers", "userDao:userPage"}, key = "'*'")
+    @Caching(
+            put = @CachePut(cacheNames = "userDao:getUser", key = "#id"),
+            evict = @CacheEvict(cacheNames = "userDao:listUsers", key = "'userList'")
+    )
     public void delUser(String id) {
         userDao.delUser(id);
     }

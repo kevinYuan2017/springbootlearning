@@ -2,9 +2,11 @@ package com.kevin.springboot.learning.chapter7.redis.controller;
 
 import com.kevin.springboot.learning.chapter7.redis.pojo.User;
 import com.kevin.springboot.learning.chapter7.redis.service.UserService;
+import org.springframework.data.redis.cache.RedisCache;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -39,7 +41,7 @@ public class CacheController {
         tmpUser.setId(UUID.randomUUID().toString());
         tmpUser.setName(recUser.getName());
         tmpUser.setNote(recUser.getNote());
-        return userService.insertuser(tmpUser);
+        return userService.insertUser(tmpUser);
     }
 
     @PutMapping("/user")
