@@ -23,7 +23,10 @@ public class UserServiceImpl implements UserService {
     @Override
     @Caching(
             put = @CachePut(cacheNames = "userDao:getUser", key = "#user.id"),
-            evict = @CacheEvict(cacheNames = "userDao:listUsers", key = "'userList'")
+            evict = {
+                    @CacheEvict(cacheNames = "userDao:listUsers", key = "'userList'"),
+                    @CacheEvict(cacheNames = "userDao:userPage", allEntries = true)
+            }
     )
     public User insertUser(User user) {
         userDao.insertUser(user);
@@ -37,8 +40,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @CachePut(cacheNames = "userDao:getUser", key = "#user.id")
-    @CacheEvict(cacheNames = "userDao:listUsers", key = "'userList'")
+    @Caching(
+            put = @CachePut(cacheNames = "userDao:getUser", key = "#user.id"),
+            evict = {
+                    @CacheEvict(cacheNames = "userDao:listUsers", key = "'userList'"),
+                    @CacheEvict(cacheNames = "userDao:userPage", allEntries = true)
+            }
+    )
     public User updateUser(User user) {
         userDao.updateUser(user);
         return user;
@@ -47,7 +55,10 @@ public class UserServiceImpl implements UserService {
     @Override
     @Caching(
             put = @CachePut(cacheNames = "userDao:getUser", key = "#id"),
-            evict = @CacheEvict(cacheNames = "userDao:listUsers", key = "'userList'")
+            evict = {
+                    @CacheEvict(cacheNames = "userDao:listUsers", key = "'userList'"),
+                    @CacheEvict(cacheNames = "userDao:userPage", allEntries = true)
+            }
     )
     public void delUser(String id) {
         userDao.delUser(id);
