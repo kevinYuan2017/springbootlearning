@@ -1,54 +1,71 @@
 package com.kevin.springboot.learning.websocketchapter13.service;
 
+import com.kevin.springboot.learning.websocketchapter13.event.LoginEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import javax.websocket.*;
+import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-@ServerEndpoint("/ws")
+@ServerEndpoint("/ws/{username}/{password}")
 @Service
 public class WebSocketServiceImpl {
-    private static Logger logger = LoggerFactory.getLogger(WebSocketServiceImpl.class);
+    private static Logger LOGGER = LoggerFactory.getLogger(WebSocketServiceImpl.class);
     private static int onLineCount = 0;
-    private static CopyOnWriteArraySet<WebSocketServiceImpl> webSocketSet = new CopyOnWriteArraySet<>();
-    private Session session;
+    private static ConcurrentHashMap<String, Session> sessionMap = new ConcurrentHashMap<>();
+    private static ApplicationEventPublisher eventPublisher;
+
+    @Autowired
+    public WebSocketServiceImpl(ApplicationEventPublisher publisher) {
+        eventPublisher = publisher;
+    }
+
+    public WebSocketServiceImpl() {
+    }
 
     @OnOpen
-    public void onOpen(Session session){
-        this.session = session;
-        webSocketSet.add(this);
+    public void onOpen(Session session, @PathParam("username") String username, @PathParam("password") String password){
+        if (username != null && password != null) {
+            LOGGER.info("user {} stepped in. password: {}", username, password);
+        }else {
+            onClose(session);
+            LOGGER.warn("username or password is invalid or mismatch.");
+            return;
+        }
+        sessionMap.put(username, session);
         addOnLineCount();
+        eventPublisher.publishEvent(new LoginEvent(username));
     }
 
     @OnClose
-    public void onClose(){
-        webSocketSet.remove(this);
+    public void onClose(Session session){
+        String username = session.getPathParameters().get("username");
+        System.out.println("user " + username + " stepped out.");
+        sessionMap.remove(username);
         subOnLineCount();
-        logger.info("one connection closed! Current online count is {}", getOnLineCount());
+        LOGGER.info("one connection closed! Current online count is {}", getOnLineCount());
     }
 
     @OnMessage
     public void onMessage(String message, Session session){
-        logger.info("message from client: {}", message);
+        LOGGER.info("message from client: {}", message);
 
-        for (WebSocketServiceImpl item: webSocketSet){
-            try {
-                String userName = item.session.getUserPrincipal().getName();
-                logger.info("userName: {}", userName);
-                item.sendMessage(message);
-            }catch (IOException e){
-                e.printStackTrace();
-            }
-        }
+        // 获取用户ID
+        Map<String, String> map = session.getPathParameters();
+        String username = map.get("username");
+        sendMessage( sessionMap.get(username), message);
     }
 
     @OnError
     public void onError(Session session, Throwable error){
-        logger.error("ERROR!!!");
+        LOGGER.error("ERROR!!!");
         error.printStackTrace();
     }
 
@@ -57,12 +74,20 @@ public class WebSocketServiceImpl {
     }
 
     private static synchronized void addOnLineCount(){
-        WebSocketServiceImpl.onLineCount++;
+        onLineCount++;
     }
     private static synchronized void subOnLineCount(){
-        WebSocketServiceImpl.onLineCount--;
+        onLineCount--;
     }
-    private void sendMessage(String message) throws IOException{
-        this.session.getBasicRemote().sendText(message);
+    public void sendMessage(Session clientSession, String message) {
+        try {
+            clientSession.getBasicRemote().sendText(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static ConcurrentHashMap<String, Session> getSessionMap() {
+        return sessionMap;
     }
 }
