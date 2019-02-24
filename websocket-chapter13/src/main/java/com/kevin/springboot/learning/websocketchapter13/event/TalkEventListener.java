@@ -2,7 +2,7 @@ package com.kevin.springboot.learning.websocketchapter13.event;
 
 import com.hzwq.micro.redis.Redis;
 import com.kevin.springboot.learning.websocketchapter13.consts.Const;
-import com.kevin.springboot.learning.websocketchapter13.service.WebSocketServiceImpl;
+import com.kevin.springboot.learning.websocketchapter13.service.WebSocketService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +19,14 @@ import java.util.Map;
 public class TalkEventListener {
     private static final Logger LOGGER = LoggerFactory.getLogger(TalkEventListener.class);
     @Autowired
-    private WebSocketServiceImpl webSocketService;
+    private WebSocketService webSocketService;
     @Autowired
     private Redis redis;
     @EventListener
     public void talkEventListener(TalkEvent talkEvent) {
         TalkEvent.TalkMessage msg = talkEvent.getMsg();
         LOGGER.info("user: {} received a msg body: {}", msg.getUsername(), msg.getBody());
-        Session clientSession = WebSocketServiceImpl.getSessionMap().get(msg.getUsername());
+        Session clientSession = WebSocketService.getSessionMap().get(msg.getUsername());
         if (clientSession != null && clientSession.isOpen()) {
             LOGGER.info("try to send the msg to him.");
             webSocketService.sendMessage(clientSession, msg.getBody());

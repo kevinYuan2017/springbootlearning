@@ -16,18 +16,18 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @ServerEndpoint("/ws/{username}/{password}")
 @Service
-public class WebSocketServiceImpl {
-    private static Logger LOGGER = LoggerFactory.getLogger(WebSocketServiceImpl.class);
+public class WebSocketService {
+    private static Logger LOGGER = LoggerFactory.getLogger(WebSocketService.class);
     private static int onLineCount = 0;
     private static ConcurrentHashMap<String, Session> sessionMap = new ConcurrentHashMap<>();
     private static ApplicationEventPublisher eventPublisher;
 
     @Autowired
-    public WebSocketServiceImpl(ApplicationEventPublisher publisher) {
+    public WebSocketService(ApplicationEventPublisher publisher) {
         eventPublisher = publisher;
     }
 
-    public WebSocketServiceImpl() {
+    public WebSocketService() {
     }
 
     @OnOpen

@@ -2,7 +2,7 @@ package com.kevin.springboot.learning.websocketchapter13.event;
 
 import com.hzwq.micro.redis.Redis;
 import com.kevin.springboot.learning.websocketchapter13.consts.Const;
-import com.kevin.springboot.learning.websocketchapter13.service.WebSocketServiceImpl;
+import com.kevin.springboot.learning.websocketchapter13.service.WebSocketService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ public class LoginEventListener  {
     @Autowired
     private Redis redis;
     @Autowired
-    private WebSocketServiceImpl webSocketService;
+    private WebSocketService webSocketService;
 
     @EventListener
     public void loginEventListener(LoginEvent loginEvent) {
@@ -34,7 +34,7 @@ public class LoginEventListener  {
             for (Map<String, String> msgMap : userMsgList) {
                 if (username.equals(msgMap.get(Const.USERNAME))) {
                     String msgBody = msgMap.get(Const.MSGBODY);
-                    Session session = WebSocketServiceImpl.getSessionMap().get(username);
+                    Session session = WebSocketService.getSessionMap().get(username);
                     LOGGER.info("pushing cache msg to user: {}, msg: {}", username, msgBody);
                     webSocketService.sendMessage(session, msgMap.get(Const.MSGBODY));
                 }else {
