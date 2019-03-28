@@ -12,6 +12,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import javax.annotation.Resource;
 
 @RunWith(SpringRunner.class)
@@ -49,6 +52,5 @@ public class RedisApplicationTests {
             }
         });
     }
-
 }
 
